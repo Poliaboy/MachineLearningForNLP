@@ -1,5 +1,6 @@
 from ir_system import IRSystem
 from CNN.loadCNN import loadCNN
+import random
 
 def main():
     # Load CNN dataset using the provided function
@@ -14,9 +15,10 @@ def main():
     ir_system = IRSystem(n_samples=n_samples)
     ir_system.load_data(documents, summaries)
     
-    # Test with a few example queries
-    print("Testing IR System with example queries...")
-    for i in range(3):
+    # Test with a few random example queries
+    print("Testing IR System with random example queries...")
+    random_indices = random.sample(range(n_samples), 3)  # Pick 3 random indices
+    for i in random_indices:
         query = summaries[i]
         results = ir_system.retrieve(query, top_k=5)
         print("--------------------------------")
