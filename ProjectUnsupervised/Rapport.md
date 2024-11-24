@@ -1,99 +1,127 @@
-# Information Retrieval Models Comparison
-**Authors**: Alex Szpakiewicz, Léonard roussard 
-**Date**: 10/11/2024
-**Colab Notebook**: [Your Colab Link]
+# Report: Enhancing Recommendation Systems with NLP
+
+## Project Overview
+
+This project aimed to develop a recommendation system capable of identifying the most semantically similar hotel based on user reviews. The objective was to surpass BM25 without preprocessing—a foundational information retrieval model. By exploring hybrid approaches, transformer-based architectures, and specialized models, the goal was to improve both accuracy and efficiency while addressing BM25’s inherent limitations.
 
 ## Introduction
-This report presents our exploration of various information retrieval models, comparing their performance against a baseline BM25 model. We implemented and evaluated several approaches, from traditional lexical matching to modern neural methods.
 
-## Methodology
-We evaluated each model using Mean Squared Error (MSE) on a test set of 100 queries. Lower MSE indicates better performance.
+The dataset used was the **TripAdvisor Hotel Review dataset**, which includes textual reviews and ratings for seven aspects: service, cleanliness, overall experience, value, location, sleep quality, and rooms. To prepare the dataset:
 
-### Implemented Models
+1. **Filtering**: Reviews missing ratings for any of the seven aspects were removed.
+2. **Aggregation**: Reviews were grouped by the `offering_id` attribute, consolidating all textual data for each hotel.
+3. **Averaging**: Aspect ratings were averaged for each hotel to create a unified metric for evaluation.
 
-1. **Baseline: BM25 without preprocessing**
-   - Traditional lexical matching algorithm
-   - MSE: 0.5282 (±0.9304)
+Using my MacBook Pro with an M3 Pro CPU and GPU, I was able to process the entire dataset efficiently. Unlike in cloud environments like Colab, where performance limitations often restrict data usage, my setup enabled comprehensive experimentation without compromising speed.
 
-2. **BM25 with preprocessing**
-   - Enhanced BM25 with text preprocessing steps
-   - MSE: 0.4885 (±0.8819)
-   - Improvement: 7.52%
+## BM25 Baseline Evaluation
 
-3. **Hybrid BM25 with Dense Retriever**
-   - Combined BM25 with all-mpnet-base-v2 embeddings
-   - MSE: 0.4891 (±0.8818)
-   - Improvement: 7.40%
+### What is BM25?
 
-4. **ColBERT-style Retriever**
-   - Late interaction model
-   - MSE: 0.6222 (±0.9271)
-   - Performance degradation: -17.80%
+BM25 is a ranking function based on keyword matching between a query and documents. It evaluates:
 
-5. **BERT Bi-encoder**
-   - Dense retrieval using BERT
-   - MSE: 0.4546 (±0.5686)
-   - Improvement: 13.93%
+1. **Term Frequency (TF)**: Importance of a word within a document.
+2. **Inverse Document Frequency (IDF)**: Rarity of the word across the entire corpus.
+3. **Length Normalization**: Preference for shorter documents when scores are otherwise identical.
 
-6. **SBERT Semantic Model**
-   - Sentence-BERT based retrieval
-   - MSE: 0.4838 (±0.7230)
-   - Improvement: 8.41%
+BM25 is simple yet effective, making it a common baseline for information retrieval tasks.
 
-7. **Dual Encoder Model**
-   - Best performing model
-   - MSE: 0.3694 (±0.5199)
-   - Improvement: 30.06%
+### Results
 
-## Results Analysis
+BM25 was tested in two scenarios:
 
-### Performance Comparison
-1. **Best Performance**: Dual Encoder Model (MSE: 0.3694)
-   - 30.06% improvement over baseline
-   - Lowest variance (±0.5199) among all models
-2. **Worst Performance**: ColBERT-style Retriever (MSE: 0.6222)
+1. **Without Preprocessing (Baseline for Comparison)**: Raw reviews were used.
+   - Average Scoring Time per Query: **26.83 seconds**
+   - Total Time: **~44.72 minutes**
+   - MSE: **0.5350**
 
-### Best Model Architecture: Dual Encoder
-The Dual Encoder model achieved superior performance through its specialized architecture:
+2. **With Preprocessing**: Tokenization, stop-word removal, and text cleaning were applied as a custom improvement.
+   - Average Scoring Time per Query: **11.88 seconds**
+   - Total Time: **~19.80 minutes**
+   - MSE: **0.4734**
 
-1. **Architecture Components**:
-   - Two separate BERT-based encoders:
-     - Query Encoder: Optimized for short query text
-     - Document Encoder: Handles longer document content
-   - Shared embedding space for queries and documents
-   - Similarity scoring mechanism
+While BM25 with preprocessing demonstrated notable improvements, the primary baseline for comparison in this project was BM25 without preprocessing. Notably, all other models were implemented on the cleaned dataset, showcasing BM25’s robustness against more complex models.
 
-2. **Working Mechanism**:
-   - **Encoding Phase**:
-     - Queries and documents are processed independently
-     - Each encoder produces dense vector representations
-     - Vectors are normalized to unit length
-   
-   - **Matching Phase**:
-     - Similarity computed using dot product between query and document vectors
-     - Efficient retrieval through approximate nearest neighbor search
-     - Scores normalized to match relevance labels
+## Approach to Model Exploration
 
-3. **Key Advantages**:
-   - Independent processing allows for document pre-computation
-   - Efficient at inference time
-   - Better semantic understanding compared to lexical matching
-   - Lower variance in results (±0.5199)
+The iterative approach started with BM25 and sought to address its limitations. BM25 without preprocessing, while effective, had a high MSE and slow processing speed. My first improvement involved combining BM25 with semantic embeddings to better capture meaning. However, the hybrid model still relied on BM25’s CPU-bound processing, limiting speed.
 
-### Key Findings
-- Simple preprocessing improved BM25 performance by 7.5%
-- Neural models generally outperformed traditional lexical matching
-- Dual Encoder showed the most promising results with lowest MSE and variance
-- ColBERT-style retriever unexpectedly performed worse than baseline
+Subsequent efforts focused on models capable of leveraging GPU acceleration to significantly reduce query time. These included transformer-based architectures like MPNet and sentence comparison models like SimSec. Finally, I tested the state-of-the-art **MXBI Colbert**, which combines advanced semantic understanding with efficient retrieval mechanisms, achieving promising results.
 
-### Observations
-- Dense retrieval methods (BERT, SBERT, Dual Encoder) consistently showed lower variance in results
-- Hybrid approaches (BM25 + Dense) didn't significantly improve over preprocessed BM25
-- The dual encoder architecture proved most effective, possibly due to:
-  - Better query-document representation learning
-  - Effective handling of semantic relationships
-  - Robust performance across different query types
+## Process and Model Analysis
+
+### Hybrid Model
+
+The hybrid model combined BM25’s keyword-based scoring with semantic embeddings from a pre-trained model. This approach aimed to enhance semantic understanding while retaining BM25’s precision in lexical matching.
+
+- **Performance**: MSE of **0.4910**, surpassing BM25 without preprocessing but slightly worse than BM25 with preprocessing.
+- **Efficiency**: Average query time of **12.84 seconds**; total processing time of **~21.40 minutes**.
+- **Limitations**: The reliance on BM25 meant the hybrid model was CPU-bound, significantly impacting speed.
+- **Analysis**: While this model demonstrated meaningful improvement in accuracy, its speed limitations made it impractical for large-scale applications.
+
+### Transformer-Based Model: MPNet
+
+MPNet is a transformer-based architecture designed for contextual embedding generation, capturing nuanced relationships between words.
+
+- **Performance**: MSE of **0.5476**, slightly worse than BM25 without preprocessing.
+- **Efficiency**: Leveraged GPU acceleration, achieving an average query time of **0.05 seconds**.
+- **Analysis**: MPNet offered significant speed advantages due to its GPU support but fell short in accuracy.
+
+### SimSec Model
+
+The SimSec model focuses on lightweight sentence similarity, offering a simpler architecture compared to transformers.
+
+- **Performance**: MSE of **0.5574**, worse than MPNet and BM25 without preprocessing.
+- **Efficiency**: Fastest model tested, with an average query time of **0.04 seconds**.
+- **Analysis**: While highly efficient, SimSec’s accuracy was insufficient for this application.
+
+### MXBI Colbert
+
+#### Results
+
+- **MSE**: **0.4954**, better than BM25 without preprocessing but slightly worse than BM25 with preprocessing.
+- **Average Query Time**: **0.12 seconds**
+- **Total Processing Time**: **~0.19 minutes**
+
+#### Architecture
+
+MXBI Colbert combines token-level embeddings with advanced retrieval techniques:
+
+1. **Token-Level Contextualization**: Transformer layers generate detailed embeddings for each token.
+2. **Late Interaction**: Enables direct token-to-token comparisons, enhancing precision.
+3. **Pooling and Normalization**: Mean pooling is applied, and embeddings are L2-normalized.
+
+#### Implementation
+
+Steps executed using the Hugging Face Transformers library:
+
+1. **Loading Pretrained Components**: The `mixedbread-ai/mxbai-colbert-large-v1` model and tokenizer were initialized.
+2. **Embedding Generation**: Reviews were tokenized and passed through transformer layers to generate contextualized embeddings.
+3. **Normalization**: Embeddings were normalized using L2 normalization.
+4. **Query Matching**: Cosine similarity between query and document embeddings was calculated.
+5. **Optimization**: A softmax function with temperature scaling was applied to similarity scores.
+
+### Comparative Results
+
+The models, sorted by MSE, are summarized below:
+
+| Model                 | Avg Scoring Time (s) | Total Time (min) | MSE    |
+|-----------------------|----------------------|------------------|--------|
+| BM25 (with preprocess)| 11.88               | 19.80            | 0.4734 |
+| Hybrid Model          | 12.84               | 21.40            | 0.4910 |
+| MXBI Colbert          | 0.12                | 0.19             | 0.4954 |
+| BM25 (no preprocess)  | 26.83               | 44.72            | 0.5350 |
+| MPNet                 | 0.05                | 0.09             | 0.5476 |
+| SimSec Model          | 0.04                | 0.07             | 0.5574 |
 
 ## Conclusion
-Our experiments demonstrate that while BM25 remains a strong baseline, neural approaches, particularly the Dual Encoder model, can significantly improve retrieval performance. The success of the Dual Encoder model suggests that learned representations can capture semantic relationships better than traditional lexical matching methods.
 
+BM25 without preprocessing, despite its simplicity, served as a strong baseline. Among the tested models:
+
+- The hybrid model demonstrated better accuracy but was hindered by CPU-bound limitations.
+- MXBI Colbert achieved a balance of accuracy and speed, leveraging GPU acceleration for efficient semantic retrieval.
+- BM25 with preprocessing achieved the best results overall, highlighting the importance of text cleaning.
+
+## Insights and Learning Outcomes
+
+This project highlighted the surprising efficiency of BM25 for retrieval tasks, even when compared to state-of-the-art architectures. GPU-accelerated BM25 implementations provide a promising direction to overcome CPU-bound limitations. Further training on this dataset would yield excellent results but requires high resources, making it less practical for real-world applications.
