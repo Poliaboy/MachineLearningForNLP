@@ -1,4 +1,5 @@
 # Report: Enhancing Recommendation Systems with NLP
+##### By Alex Szpakiewicz and Léonard Roussard
 
 ## Project Overview
 
