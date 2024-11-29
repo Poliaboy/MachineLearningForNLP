@@ -1,77 +1,43 @@
+# Results
 
-BM25 without preprocess:
-Average scoring time per query: 26.8290 seconds
-Total scoring time: 2682.9009 seconds
+Evaluating BM25 model without preprocessing...
+Average scoring time per query: 10.5526 seconds
+Total scoring time: 1055.2592 seconds
 Successfully evaluated queries: 100/100
-MSE Average: 0.5350
+MSE Average: 0.5476
 
-
-BM25 with preprocess:
-Average scoring time per query: 11.8800 seconds
-Total scoring time: 1188.0019 seconds
-Successfully evaluated queries: 100/100
-MSE Average: 0.4734
-
-
-Hybrid Model:
-Average scoring time per query: 12.8443 seconds
-Total scoring time: 1284.4333 seconds
+Evaluating BM25 model with preprocessing...
+Average scoring time per query: 3.7323 seconds
+Total scoring time: 373.2272 seconds
 Successfully evaluated queries: 100/100
 MSE Average: 0.4910
 
-
-Dual encoder:
-Average scoring time per query: 0.0283 seconds
-Total scoring time: 2.8294 seconds
+Evaluating Hybrid model...
+Average scoring time per query: 4.0119 seconds
+Total scoring time: 401.1897 seconds
 Successfully evaluated queries: 100/100
-MSE Average: 0.5546
+MSE Average: 0.4910
 
-
-Topic aware model:
-Average scoring time per query: 0.0982 seconds
-Total scoring time: 9.8228 seconds
+Evaluating MPNet model...
+Average scoring time per query: 0.0509 seconds
+Total scoring time: 5.0927 seconds
 Successfully evaluated queries: 100/100
-MSE Average: 0.5476
+MSE Average: 0.4637
 
-MPnet model:
-Average scoring time per query: 0.0515 seconds
-Total scoring time: 5.1458 seconds
+Evaluating SimCSE model...
+Average scoring time per query: 0.0616 seconds
+Total scoring time: 6.1583 seconds
 Successfully evaluated queries: 100/100
-MSE Average: 0.5476
+MSE Average: 0.4162
 
-Multiqa model:
-Average scoring time per query: 0.0422 seconds
-Total scoring time: 4.2207 seconds
-Successfully evaluated queries: 100/100
-MSE Average: 0.5867
-
-Simsec model:
-Average scoring time per query: 0.0409 seconds
-Total scoring time: 4.0898 seconds
-Successfully evaluated queries: 100/100
-MSE Average: 0.5574
-
-
-Uae model:
-Average scoring time per query: 0.1264 seconds
-Total scoring time: 12.6387 seconds
-Successfully evaluated queries: 100/100
-MSE Average: 0.6295
-
-Mxbai embed model:
-Average scoring time per query: 0.1207 seconds
-Total scoring time: 12.0682 seconds
+Evaluating MXBAI Embed model...
+Average scoring time per query: 0.1343 seconds
+Total scoring time: 13.4292 seconds
 Successfully evaluated queries: 100/100
 MSE Average: 0.5167
 
-Mxbai colbert model:
-Average scoring time per query: 0.1150 seconds
-Total scoring time: 11.5009 seconds
+Evaluating MXBAI ColBERT model...
+Average scoring time per query: 0.1303 seconds
+Total scoring time: 13.0313 seconds
 Successfully evaluated queries: 100/100
 MSE Average: 0.4954
-
-
-
-
-
-
