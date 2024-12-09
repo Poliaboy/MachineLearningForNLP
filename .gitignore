@@ -164,4 +164,6 @@ cython_debug/
 TD2/txt_sentoken/
 
 
-ProjectUnsupervised/reviews.csv
+Project1/reviews.csv
+Project2/TraductionAvisClients/
+Bonus_GraphMining/node2vec_embeddings.csv
