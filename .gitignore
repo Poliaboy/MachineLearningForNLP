@@ -166,4 +166,6 @@ TD2/txt_sentoken/
 
 Project1/reviews.csv
 Project2/TraductionAvisClients/
-Bonus_GraphMining/node2vec_embeddings.csv
+Bonus_GraphMining/node2vec_embeddings_normal.csv
+Bonus_GraphMining/node2vec_embeddings_undirected.csv
+
