@@ -6,7 +6,6 @@ sentence-transformers
 nltk
 transformers
 torch
-streamlit
 matplotlib
 seaborn
 openpyxl
